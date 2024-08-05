@@ -195,17 +195,56 @@ export const getTransactionStatus = (date: Date) => {
   return date > twoDaysAgo ? "Processing" : "Success";
 };
 
-export const authFormSchema = (type:string) => z.object({
-  firstName: type === 'sign-in' ? z.string().optional() : z.string().min(3, { message: 'Primeiro nome deve ter pelo menos 3 caracteres.' }),
-  lastName: type === 'sign-in' ? z.string().optional() : z.string().min(3, { message: 'Sobrenome deve ter pelo menos 3 caracteres.' }),
-  address1: type === 'sign-in' ? z.string().optional() : z.string().max(50, { message: 'Endereço deve ter no máximo 50 caracteres.' }),
-  state: type === 'sign-in' ? z.string().optional() : z.string().min(2, { message: 'Estado deve ter pelo menos 2 caracteres.' }).max(2, { message: 'Estado deve ter no máximo 2 caracteres.' }),
-  city: type === 'sign-in' ? z.string().optional() : z.string().min(3, { message: 'Cidade deve ter pelo menos 3 caracteres.' }),
-  postalCode: type === 'sign-in' ? z.string().optional() : z.string().min(8, { message: 'CEP deve ter pelo menos 8 caracteres.' }),
-  dateOfBirth: type === 'sign-in' ? z.string().optional() : z.string().min(8, { message: 'Data de nascimento inválida.' }),
-  taxId: type === 'sign-in' ? z.string().optional() : z.string().min(11, { message: 'CPF inválido.' }),
+export const authFormSchema = (type: string) =>
+  z.object({
+    firstName:
+      type === "sign-in"
+        ? z.string().optional()
+        : z.string().min(3, {
+            message: "Primeiro nome deve ter pelo menos 3 caracteres.",
+          }),
+    lastName:
+      type === "sign-in"
+        ? z.string().optional()
+        : z
+            .string()
+            .min(3, { message: "Sobrenome deve ter pelo menos 3 caracteres." }),
+    address1:
+      type === "sign-in"
+        ? z.string().optional()
+        : z
+            .string()
+            .max(50, { message: "Endereço deve ter no máximo 50 caracteres." }),
+    state:
+      type === "sign-in"
+        ? z.string().optional()
+        : z
+            .string()
+            .min(2, { message: "Estado deve ter pelo menos 2 caracteres." })
+            .max(2, { message: "Estado deve ter no máximo 2 caracteres." }),
+    city:
+      type === "sign-in"
+        ? z.string().optional()
+        : z
+            .string()
+            .min(3, { message: "Cidade deve ter pelo menos 3 caracteres." }),
+    postalCode:
+      type === "sign-in"
+        ? z.string().optional()
+        : z
+            .string()
+            .min(4, { message: "CEP deve ter pelo menos 8 caracteres." }),
+    dateOfBirth:
+      type === "sign-in"
+        ? z.string().optional()
+        : z.string().min(8, { message: "Data de nascimento inválida." }),
+    ssn:
+      type === "sign-in"
+        ? z.string().optional()
+        : z.string().min(4, { message: "CPF inválido." }),
 
-  email: z.string().email({ message: "Email inválido." }),
-  password: z
-    .string().min(8, { message: 'Senha deve ter pelo menos 8 caracteres.' }),
-});
+    email: z.string().email({ message: "Email inválido." }),
+    password: z
+      .string()
+      .min(8, { message: "Senha deve ter pelo menos 8 caracteres." }),
+  });
