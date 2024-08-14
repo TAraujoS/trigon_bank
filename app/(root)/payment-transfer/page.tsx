@@ -1,7 +1,28 @@
+import HeaderBox from "@/components/HeaderBox";
+import PaymentTransferForm from "@/components/PaymentTransferForm";
+import { getAccounts } from "@/lib/actions/bank.actions";
+import { getLoggedInUser } from "@/lib/actions/user.actions";
 import React from "react";
 
-function PaymentTransfer() {
-  return <div>payment page</div>;
-}
+const Transfer = async () => {
+  const loggedIn = await getLoggedInUser();
+  const accounts = await getAccounts({ userId: loggedIn?.$id });
 
-export default PaymentTransfer;
+  if (!accounts) return;
+
+  const accountsData = accounts?.data;
+
+  return (
+    <section className="payment-transfer">
+      <HeaderBox
+        title="Tranferencia de dinheiro"
+        subtext="Por favor, forneça qualquer detalhe ou informação relacionado a esta transação."
+      />
+      <section className="size-full pt-5">
+        <PaymentTransferForm accounts={accountsData} />
+      </section>
+    </section>
+  );
+};
+
+export default Transfer;

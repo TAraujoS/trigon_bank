@@ -12,7 +12,7 @@ export const sidebarLinks = [
   {
     imgURL: "/icons/transaction.svg",
     route: "/transaction-history",
-    label: "Histórico de Transações", 
+    label: "Histórico de Transações",
   },
   {
     imgURL: "/icons/money-send.svg",
@@ -50,7 +50,7 @@ export const ITEMS = [
 ];
 
 export const topCategoryStyles = {
-  "Alimentação": {
+  Alimentação: {
     bg: "bg-blue-25",
     circleBg: "bg-blue-100",
     text: {
@@ -92,7 +92,7 @@ export const topCategoryStyles = {
 };
 
 export const transactionCategoryStyles = {
-  "Alimentação": {
+  Alimentação: {
     borderColor: "border-pink-600",
     backgroundColor: "bg-pink-500",
     textColor: "text-pink-700",
@@ -126,6 +126,12 @@ export const transactionCategoryStyles = {
     borderColor: "border-[#12B76A]",
     backgroundColor: "bg-[#12B76A]",
     textColor: "text-[#027A48]",
+    chipBackgroundColor: "bg-[#ECFDF3]",
+  },
+  Travel: {
+    borderColor: "border-[#0047AB]",
+    backgroundColor: "bg-blue-500",
+    textColor: "text-blue-700",
     chipBackgroundColor: "bg-[#ECFDF3]",
   },
   default: {
