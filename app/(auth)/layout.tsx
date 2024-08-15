@@ -10,12 +10,11 @@ export default function RootLayout({
       {children}
       <div className="auth-asset">
         <div>
-          <Image
-            src="/icons/auth-image.svg"
-            alt="auth image"
-            width={500}
-            height={500}
-          />
+          <iframe
+            width={700}
+            height={700}
+            src="https://lottie.host/embed/3de23d36-c82b-4e2b-ad70-8fa7c98ecb0b/y7Tz45POwh.json"
+          ></iframe>
         </div>
       </div>
     </main>

@@ -38,12 +38,10 @@ const AuthForm = ({ type }: { type: string }) => {
         const userData = {
           firstName: data.firstName!,
           lastName: data.lastName!,
-          address1: data.address1!,
           state: data.state!,
           city: data.city!,
-          postalCode: data.postalCode!,
           dateOfBirth: data.dateOfBirth!,
-          ssn: data.ssn!,
+          cpf: data.cpf!,
           email: data.email,
           password: data.password,
         };
@@ -117,32 +115,19 @@ const AuthForm = ({ type }: { type: string }) => {
                 />
               </div>
 
-              <CustomInput
-                control={form.control}
-                name="address1"
-                label="Endereço"
-                placeholder="Insira o seu Endereço"
-              />
-
-              <CustomInput
-                control={form.control}
-                name="city"
-                label="Cidade"
-                placeholder="Insira a sua Cidade"
-              />
-
               <div className="flex gap-4">
+                <CustomInput
+                  control={form.control}
+                  name="city"
+                  label="Cidade"
+                  placeholder="Insira a sua Cidade"
+                />
+
                 <CustomInput
                   control={form.control}
                   name="state"
                   label="Estado"
                   placeholder="Ex: ES"
-                />
-                <CustomInput
-                  control={form.control}
-                  name="postalCode"
-                  label="CEP"
-                  placeholder="Ex: 29100-000"
                 />
               </div>
 
@@ -156,7 +141,7 @@ const AuthForm = ({ type }: { type: string }) => {
 
                 <CustomInput
                   control={form.control}
-                  name="ssn"
+                  name="cpf"
                   label="CPF"
                   placeholder="Ex: 000.000.000-00"
                 />

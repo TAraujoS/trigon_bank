@@ -70,15 +70,6 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
 
     if (!newUserAccount) throw new Error("Failed to create user");
 
-    const dwollaCustomerUrl = await createDwollaCustomer({
-      ...userData,
-      type: "personal",
-    });
-    if (!dwollaCustomerUrl)
-      throw new Error("Failed to creating Dwolla customer");
-
-    const dwollaCustomerId = extractCustomerIdFromUrl(dwollaCustomerUrl);
-
     const newUser = await database.createDocument(
       DATABASE_ID!,
       USER_COLLECTION_ID!,

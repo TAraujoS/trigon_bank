@@ -209,12 +209,6 @@ export const authFormSchema = (type: string) =>
         : z
             .string()
             .min(3, { message: "Sobrenome deve ter pelo menos 3 caracteres." }),
-    address1:
-      type === "sign-in"
-        ? z.string().optional()
-        : z
-            .string()
-            .max(50, { message: "Endereço deve ter no máximo 50 caracteres." }),
     state:
       type === "sign-in"
         ? z.string().optional()
@@ -228,17 +222,11 @@ export const authFormSchema = (type: string) =>
         : z
             .string()
             .min(3, { message: "Cidade deve ter pelo menos 3 caracteres." }),
-    postalCode:
-      type === "sign-in"
-        ? z.string().optional()
-        : z
-            .string()
-            .min(4, { message: "CEP deve ter pelo menos 8 caracteres." }),
     dateOfBirth:
       type === "sign-in"
         ? z.string().optional()
         : z.string().min(8, { message: "Data de nascimento inválida." }),
-    ssn:
+    cpf:
       type === "sign-in"
         ? z.string().optional()
         : z.string().min(4, { message: "CPF inválido." }),
