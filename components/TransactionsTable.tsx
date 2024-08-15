@@ -20,13 +20,12 @@ import { transactionCategoryStyles } from "@/constants";
 const CategoryBadge = ({ category }: CategoryBadgeProps) => {
   const { borderColor, backgroundColor, textColor, chipBackgroundColor } =
     transactionCategoryStyles[
-      (category as keyof typeof transactionCategoryStyles) ||
-        transactionCategoryStyles.default
-    ];
+      category as keyof typeof transactionCategoryStyles
+    ] || transactionCategoryStyles.default;
   return (
-    <div className={cn("cateory-badge", borderColor, chipBackgroundColor)}>
+    <div className={cn("category-badge", borderColor, chipBackgroundColor)}>
       <div className={cn("size-2 rounded-full", backgroundColor)} />
-      <p className={cn("text-[12px] font-medium", textColor)}></p>
+      <p className={cn("text-[12px] font-medium", textColor)}>{category}</p>
     </div>
   );
 };
@@ -39,7 +38,6 @@ function TransactionsTable({ transactions }: TransactionTableProps) {
           <TableHead className="px-2">Quantidade</TableHead>
           <TableHead className="px-2">Status</TableHead>
           <TableHead className="px-2">Data</TableHead>
-          <TableHead className="px-2 max-md:hidden">Canal</TableHead>
           <TableHead className="px-2 max-md:hidden">Categoria</TableHead>
         </TableRow>
       </TableHeader>
@@ -80,10 +78,6 @@ function TransactionsTable({ transactions }: TransactionTableProps) {
 
               <TableCell className="min-w-32 pl-2 pr-10">
                 {formatDateTime(new Date(t.date)).dateTime}
-              </TableCell>
-
-              <TableCell className="pl-2 pr-10 capitalize mix-w-24">
-                {t.paymentChannel}
               </TableCell>
 
               <TableCell className="pl-2 pr-10 max-md:hidden">
