@@ -13,6 +13,7 @@ import { Loader2 } from "lucide-react";
 
 import { signIn, signUp } from "@/lib/actions/user.actions";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const AuthForm = ({ type }: { type: string }) => {
   const router = useRouter();
@@ -45,6 +46,7 @@ const AuthForm = ({ type }: { type: string }) => {
         };
         const newUser = await signUp(userData);
         setUser(newUser);
+        if (newUser) router.push("/sign-in");
       }
 
       if (type === "sign-in") {
@@ -52,13 +54,14 @@ const AuthForm = ({ type }: { type: string }) => {
           email: data.email,
           password: data.password,
         });
-
         if (response) {
           router.push("/");
+          toast.success("Login efetuado com sucesso!");
         }
       }
     } catch (error) {
       console.log(error);
+      toast.error("Erro ao efetuar login. Tente novamente!");
     } finally {
       setLoading(false);
     }
@@ -76,15 +79,9 @@ const AuthForm = ({ type }: { type: string }) => {
 
         <div className="flex flex-col gap-1 md:gap-3">
           <h1 className="text-24 lg:text-36 font-semibold text-gray-900">
-            {user
-              ? "Link Account"
-              : type === "sign-in"
-              ? "Entrar"
-              : "Cadastrar-se"}
+            {type === "sign-in" ? "Entrar" : "Cadastrar-se"}
             <p className="text-16 font-normal text-gray-600">
-              {user
-                ? "Conecte sua conta para começar"
-                : "Por favor entre com seus dados"}
+              Por favor entre com seus dados
             </p>
           </h1>
         </div>
@@ -98,13 +95,13 @@ const AuthForm = ({ type }: { type: string }) => {
                   control={form.control}
                   name="firstName"
                   label="Nome"
-                  placeholder="Insira o seu Nome"
+                  placeholder="Insira seu Nome"
                 />
                 <CustomInput
                   control={form.control}
                   name="lastName"
                   label="Sobrenome"
-                  placeholder="Insira o seu Sobrenome"
+                  placeholder="Insira seu Sobrenome"
                 />
               </div>
 
