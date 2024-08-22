@@ -7,7 +7,7 @@ export const sidebarLinks = [
   {
     imgURL: "/icons/dollar-circle.svg",
     route: "/my-banks",
-    label: "My Banks",
+    label: "Meus Bancos",
   },
   {
     imgURL: "/icons/transaction.svg",
@@ -17,7 +17,7 @@ export const sidebarLinks = [
   {
     imgURL: "/icons/money-send.svg",
     route: "/payment-transfer",
-    label: "Transfer Funds",
+    label: "Transferir Pagamento",
   },
 ];
 
@@ -104,7 +104,7 @@ export const transactionCategoryStyles = {
     textColor: "text-success-700",
     chipBackgroundColor: "bg-inherit",
   },
-  "Bank Fees": {
+  Lazer: {
     borderColor: "border-success-600",
     backgroundColor: "bg-green-600",
     textColor: "text-success-700",

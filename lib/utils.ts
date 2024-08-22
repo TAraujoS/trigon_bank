@@ -66,6 +66,130 @@ export const formatDateTime = (dateString: Date) => {
   };
 };
 
+export const mockAccount = {
+  totalBanks: 1,
+  totalCurrentBalance: 199,
+  data: [
+    {
+      id: "123",
+      avaialableBalance: 99,
+      currentBalance: 199,
+      institutionId: "ins_56",
+      name: "Banco Exemplo",
+      officialName: "Trygon",
+      mask: "1234",
+      type: "checking",
+      subtype: "checking",
+      appwriteItemId: "1234",
+      sharableId: "12345",
+    },
+  ],
+  transactions: [
+    {
+      account_id: "1234",
+      transaction_id: "v0D9JxKk3dhwZRlEVrZotkMXEZveVmHd83wJ5",
+      amount: 29.99,
+      iso_currency_code: "USD",
+      date: "2024-08-15",
+      merchant_name: "Amazon",
+      name: "Amazon Purchase",
+      payment_channel: "online",
+      category: "Pagamentos",
+      category_id: "19013000",
+    },
+    {
+      account_id: "1234",
+      transaction_id: "r3P1JxGg3Rf7ZRtT6pZotjH1R2vD5mHd5YtV7",
+      amount: 15.75,
+      iso_currency_code: "USD",
+      date: "2024-08-14",
+      merchant_name: "Starbucks",
+      name: "Starbucks Coffee",
+      payment_channel: "online",
+      category: "Alimentação",
+      category_id: "13005043",
+    },
+    {
+      account_id: "1234",
+      transaction_id: "t9M5JxLg2QawZRbO2mXoxkFMZaWdZnHd9QwJ9",
+      amount: 102.5,
+      iso_currency_code: "USD",
+      date: "2024-08-13",
+      merchant_name: "Walmart",
+      name: "Walmart Groceries",
+      payment_channel: "online",
+      category: "Viagem",
+      category_id: "19047000",
+    },
+  ],
+};
+export const mockPlaidAccount = {
+  data: {
+    accounts: [
+      {
+        account_id: "A3wenK5EQRfKlnxlBbVXtPw9gyazDWu1EdaZD",
+        balances: {
+          available: 100,
+          current: 110,
+          iso_currency_code: "USD",
+          limit: null,
+          unofficial_currency_code: null,
+        },
+        mask: "0000",
+        name: "Plaid Checking",
+        official_name: "Plaid Gold Standard 0% Interest Checking",
+        subtype: "checking",
+        type: "depository",
+      },
+      {
+        account_id: "GPnpQdbD35uKdxndAwmbt6aRXryj4AC1yQqmd",
+        balances: {
+          available: 200,
+          current: 210,
+          iso_currency_code: "USD",
+          limit: null,
+          unofficial_currency_code: null,
+        },
+        mask: "1111",
+        name: "Plaid Saving",
+        official_name: "Plaid Silver Standard 0.1% Interest Saving",
+        subtype: "savings",
+        type: "depository",
+      },
+      {
+        account_id: "nVRK5AmnpzFGv6LvpEoRivjk9p7N16F6wnZrX",
+        balances: {
+          available: null,
+          current: 1000,
+          iso_currency_code: "USD",
+          limit: null,
+          unofficial_currency_code: null,
+        },
+        mask: "2222",
+        name: "Plaid CD",
+        official_name: "Plaid Bronze Standard 0.2% Interest CD",
+        subtype: "cd",
+        type: "depository",
+      },
+    ],
+    item: {
+      available_products: [
+        "assets",
+        "balance",
+        "identity",
+        "investments",
+        "transactions",
+      ],
+      billed_products: ["auth"],
+      consent_expiration_time: null,
+      error: null,
+      institution_id: "ins_12",
+      item_id: "gVM8b7wWA5FEVkjVom3ri7oRXGG4mPIgNNrBy",
+      webhook: "https://requestb.in",
+    },
+    request_id: "C3IZlexgvNTSukt",
+  },
+};
 export function formatAmount(amount: number): string {
   const formatter = new Intl.NumberFormat("pt-BR", {
     style: "currency",
@@ -136,25 +260,18 @@ export function countTransactionCategories(
   const categoryCounts: { [category: string]: number } = {};
   let totalCount = 0;
 
-  // Iterate over each transaction
   transactions &&
     transactions.forEach((transaction) => {
-      // Extract the category from the transaction
       const category = transaction.category;
 
-      // If the category exists in the categoryCounts object, increment its count
       if (categoryCounts.hasOwnProperty(category)) {
         categoryCounts[category]++;
       } else {
-        // Otherwise, initialize the count to 1
         categoryCounts[category] = 1;
       }
-
-      // Increment total count
       totalCount++;
     });
 
-  // Convert the categoryCounts object to an array of objects
   const aggregatedCategories: CategoryCount[] = Object.keys(categoryCounts).map(
     (category) => ({
       name: category,
@@ -163,17 +280,14 @@ export function countTransactionCategories(
     })
   );
 
-  // Sort the aggregatedCategories array by count in descending order
   aggregatedCategories.sort((a, b) => b.count - a.count);
 
   return aggregatedCategories;
 }
 
 export function extractCustomerIdFromUrl(url: string) {
-  // Split the URL string by '/'
   const parts = url.split("/");
 
-  // Extract the last part, which represents the customer ID
   const customerId = parts[parts.length - 1];
 
   return customerId;
@@ -192,7 +306,7 @@ export const getTransactionStatus = (date: Date) => {
   const twoDaysAgo = new Date(today);
   twoDaysAgo.setDate(today.getDate() - 2);
 
-  return date > twoDaysAgo ? "Processing" : "Success";
+  return date > twoDaysAgo ? "Processando" : "Sucesso";
 };
 
 export const authFormSchema = (type: string) =>
@@ -200,36 +314,40 @@ export const authFormSchema = (type: string) =>
     firstName:
       type === "sign-in"
         ? z.string().optional()
-        : z.string().min(3, {
+        : z.string({ required_error: "Obrigatório" }).min(3, {
             message: "Primeiro nome deve ter pelo menos 3 caracteres.",
           }),
     lastName:
       type === "sign-in"
         ? z.string().optional()
         : z
-            .string()
+            .string({ required_error: "Obrigatório" })
             .min(3, { message: "Sobrenome deve ter pelo menos 3 caracteres." }),
     state:
       type === "sign-in"
         ? z.string().optional()
         : z
-            .string()
+            .string({ required_error: "Obrigatório" })
             .min(2, { message: "Estado deve ter pelo menos 2 caracteres." })
             .max(2, { message: "Estado deve ter no máximo 2 caracteres." }),
     city:
       type === "sign-in"
         ? z.string().optional()
         : z
-            .string()
+            .string({ required_error: "Obrigatório" })
             .min(3, { message: "Cidade deve ter pelo menos 3 caracteres." }),
     dateOfBirth:
       type === "sign-in"
         ? z.string().optional()
-        : z.string().min(8, { message: "Data de nascimento inválida." }),
+        : z
+            .string({ required_error: "Obrigatório" })
+            .min(8, { message: "Data de nascimento inválida." }),
     cpf:
       type === "sign-in"
         ? z.string().optional()
-        : z.string().min(4, { message: "CPF inválido." }),
+        : z
+            .string({ required_error: "Obrigatório" })
+            .min(11, { message: "CPF inválido." }),
 
     email: z.string().email({ message: "Email inválido." }),
     password: z

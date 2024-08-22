@@ -15,7 +15,7 @@ const Transfer = async () => {
   return (
     <section className="payment-transfer">
       <HeaderBox
-        title="Tranferencia de dinheiro"
+        title="Tranferência de dinheiro"
         subtext="Por favor, forneça qualquer detalhe ou informação relacionado a esta transação."
       />
       <section className="size-full pt-5">
