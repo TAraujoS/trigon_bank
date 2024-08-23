@@ -60,7 +60,20 @@ function RecentTransactions({
               type="full"
             />
 
-            <TransactionsTable transactions={currentTransactions} />
+            {transactions.length > 0 ? (
+              <TransactionsTable transactions={currentTransactions} />
+            ) : (
+              <div className="flex flex-col gap-4 items-center">
+                <p className="header-box-subtext ">
+                  Você ainda não possui transações nessa conta.
+                </p>
+                <iframe
+                  width={300}
+                  height={300}
+                  src="https://lottie.host/embed/5bceff30-cb69-44e3-aa52-eeb84d556bb1/gJpgG8ParS.json"
+                ></iframe>
+              </div>
+            )}
 
             {totalPages > 1 && (
               <div className="my-4 w-full">

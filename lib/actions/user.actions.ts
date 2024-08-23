@@ -1,6 +1,6 @@
 "use server";
 
-import { ID, Query } from "node-appwrite";
+import { AppwriteException, ID, Query } from "node-appwrite";
 import { createAdminClient, createSessionClient } from "../appwrite";
 import { cookies } from "next/headers";
 import { parseStringify } from "../utils";
@@ -11,6 +11,7 @@ const {
   APPWRITE_DATABASE_ID: DATABASE_ID,
   APPWRITE_USER_COLLECTION_ID: USER_COLLECTION_ID,
   APPWRITE_BANK_COLLECTION_ID: BANK_COLLECTION_ID,
+  APPWRITE_ACCOUNT_COLLECTION_ID: ACCOUNT_COLLECTION_ID,
 } = process.env;
 
 export const getUserInfo = async ({ userId }: getUserInfoProps) => {
@@ -42,9 +43,9 @@ export const signIn = async ({ email, password }: signInProps) => {
     const user = await getUserInfo({ userId: session.userId });
 
     return parseStringify(user);
-  } catch (error) {
+  } catch (error: AppwriteException | any) {
     console.log("Sign In Error", error);
-    throw new Error("Sign In Error");
+    throw new Error(error.type || "Sign In Error");
   }
 };
 
@@ -76,6 +77,21 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
 
     const session = await account.createEmailPasswordSession(email, password);
 
+    const userExempleBankAccount = await createUserBankAccount({
+      userId: newUser.$id,
+      bankId: ID.unique(),
+      sharableId: ID.unique(),
+      bankName: "Banco Trigon Exemplo",
+    });
+
+    const bank = await createBankAccount({
+      accountId: ID.unique(),
+      bankId: userExempleBankAccount.bankId,
+      mask: "1234",
+      currentBalance: 1,
+      accountType: "Poupança",
+    });
+
     cookies().set("appwrite-session", session.secret, {
       path: "/",
       httpOnly: true,
@@ -84,9 +100,9 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
     });
 
     return parseStringify(newUser);
-  } catch (error) {
+  } catch (error: AppwriteException | any) {
     console.log("Sign Up Error", error);
-    throw new Error("Sign Up Error");
+    throw new Error(error.type || "Sign Up Error");
   }
 };
 
@@ -116,14 +132,12 @@ export const logoutAccount = async () => {
   }
 };
 
-export const createBankAccount = async ({
+export const createUserBankAccount = async ({
   userId,
   bankId,
-  accountId,
-  accessToken,
-  fundingSourceUrl,
   sharableId,
-}: createBankAccountProps) => {
+  bankName,
+}: createUserBankAccountProps) => {
   try {
     const { database } = await createAdminClient();
 
@@ -134,10 +148,8 @@ export const createBankAccount = async ({
       {
         userId,
         bankId,
-        accountId,
-        accessToken,
-        fundingSourceUrl,
         sharableId,
+        bankName,
       }
     );
 
@@ -147,6 +159,34 @@ export const createBankAccount = async ({
   }
 };
 
+export const createBankAccount = async ({
+  accountId,
+  bankId,
+  mask,
+  currentBalance,
+  accountType,
+}: createBankAccountProps) => {
+  try {
+    const { database } = await createAdminClient();
+
+    const bankAccount = await database.createDocument(
+      DATABASE_ID!,
+      ACCOUNT_COLLECTION_ID!,
+      ID.unique(),
+      {
+        bankId,
+        accountId,
+        mask,
+        currentBalance,
+        accountType,
+      }
+    );
+
+    return parseStringify(bankAccount);
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const getBanks = async ({ userId }: getBanksProps) => {
   try {
     const { database } = await createAdminClient();

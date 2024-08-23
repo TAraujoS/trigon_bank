@@ -1,39 +1,45 @@
 "use server";
 
-import { mockPlaidAccount, parseStringify } from "../utils";
+import { Query } from "node-appwrite";
+import { parseStringify } from "../utils";
 
 import { getTransactionsByBankId } from "./transaction.actions";
 import { getBanks, getBank } from "./user.actions";
+import { createAdminClient } from "../appwrite";
+
+const {
+  APPWRITE_DATABASE_ID: DATABASE_ID,
+  APPWRITE_ACCOUNT_COLLECTION_ID: ACCOUNT_COLLECTION_ID,
+} = process.env;
 
 export const getAccounts = async ({ userId }: getAccountsProps) => {
   try {
     const banks = await getBanks({ userId });
+    const { database } = await createAdminClient();
 
-    const accounts: Account[] = [];
-    // const accounts = await Promise.all(
-    //   banks?.map(async (bank: Bank) => {
-    //     const accountsResponse = await plaidClient.accountsGet({
-    //       access_token: bank.accessToken,
-    //     });
-    //     const accountData = accountsResponse.data.accounts[0];
+    const accounts = await Promise.all(
+      banks?.documents.map(async (bank: Bank) => {
+        const accountsResponse = await database.listDocuments(
+          DATABASE_ID!,
+          ACCOUNT_COLLECTION_ID!,
+          [Query.equal("bankId", [bank.$id])]
+        );
 
-    //     const account = {
-    //       id: accountData.account_id,
-    //       availableBalance: accountData.balances.available!,
-    //       currentBalance: accountData.balances.current!,
-    //       // institutionId: institution.institution_id,
-    //       name: accountData.name,
-    //       officialName: accountData.official_name,
-    //       mask: accountData.mask!,
-    //       type: accountData.type as string,
-    //       subtype: accountData.subtype! as string,
-    //       appwriteItemId: bank.$id,
-    //       sharableId: bank.sharableId,
-    //     };
+        const accountData = accountsResponse.documents[0];
 
-    //     return account;
-    //   })
-    // );
+        const account = {
+          id: accountData.accountId,
+          currentBalance: accountData.currentBalance,
+          name: bank.bankName,
+          mask: accountData.mask,
+          accountType: accountData.accountType,
+          appwriteItemId: bank.bankId,
+          sharableId: bank.sharableId,
+        };
+
+        return account;
+      })
+    );
 
     const totalBanks = accounts.length;
     const totalCurrentBalance = accounts.reduce((total, account) => {
@@ -49,9 +55,15 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
 export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
   try {
     const bank = await getBank({ documentId: appwriteItemId });
+    const { database } = await createAdminClient();
 
-    const accountsResponse = mockPlaidAccount;
-    const accountData = accountsResponse.data.accounts[0];
+    const accountsResponse = await database.listDocuments(
+      DATABASE_ID!,
+      ACCOUNT_COLLECTION_ID!,
+      [Query.equal("bankId", [bank.$id])]
+    );
+
+    const accountData = accountsResponse.documents[0];
 
     const transferTransactionsData = await getTransactionsByBankId({
       bankId: bank.$id,

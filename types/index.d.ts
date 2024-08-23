@@ -84,8 +84,7 @@ declare type Bank = {
   $id: string;
   accountId: string;
   bankId: string;
-  accessToken: string;
-  fundingSourceUrl: string;
+  bankName: string;
   userId: string;
   sharableId: string;
 };
@@ -306,13 +305,19 @@ declare interface exchangePublicTokenProps {
   user: User;
 }
 
-declare interface createBankAccountProps {
-  accessToken: string;
+declare interface createUserBankAccountProps {
   userId: string;
+  bankId: string;
+  bankName: string;
+  sharableId: string;
+}
+
+declare interface createBankAccountProps {
   accountId: string;
   bankId: string;
-  fundingSourceUrl: string;
-  sharableId: string;
+  mask: string;
+  currentBalance: number;
+  accountType: string;
 }
 
 declare interface getBanksProps {

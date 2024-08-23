@@ -14,6 +14,7 @@ import { Loader2 } from "lucide-react";
 import { signIn, signUp } from "@/lib/actions/user.actions";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { AppwriteException } from "node-appwrite";
 
 const AuthForm = ({ type }: { type: string }) => {
   const router = useRouter();
@@ -59,9 +60,15 @@ const AuthForm = ({ type }: { type: string }) => {
           toast.success("Login efetuado com sucesso!");
         }
       }
-    } catch (error) {
+    } catch (error: AppwriteException | any) {
       console.log(error);
-      toast.error("Erro ao efetuar login. Tente novamente!");
+      if (error.message === "user_invalid_credentials") {
+        toast.error("Email ou senha inválidos. Tente novamente!");
+      } else if (error.message === "user_already_exists") {
+        toast.error("Já existe uma conta com esse email. Tente novamente!");
+      } else {
+        toast.error("Erro ao efetuar login. Tente novamente!");
+      }
     } finally {
       setLoading(false);
     }
