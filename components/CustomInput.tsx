@@ -3,7 +3,7 @@ import { FormControl, FormField, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
 import { Control, FieldPath } from "react-hook-form";
 import { z } from "zod";
-import { authFormSchema } from "@/lib/utils";
+import { authFormSchema, formatToCPF, formatToDate } from "@/lib/utils";
 
 const formSchema = authFormSchema("sign-up");
 
@@ -33,6 +33,16 @@ const CustomInput = ({
                 {...field}
                 placeholder={placeholder}
                 className="input-class"
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (name === "cpf") {
+                    field.onChange(formatToCPF(value));
+                  } else if (name === "dateOfBirth") {
+                    field.onChange(formatToDate(value));
+                  } else {
+                    field.onChange(value);
+                  }
+                }}
               />
             </FormControl>
             <FormMessage className="form-message mt-2" />

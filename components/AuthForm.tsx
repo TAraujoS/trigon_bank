@@ -41,7 +41,7 @@ const AuthForm = ({ type }: { type: string }) => {
           state: data.state!,
           city: data.city!,
           dateOfBirth: data.dateOfBirth!,
-          cpf: data.cpf!,
+          cpf: data.cpf!.replace(/\D/g, ""),
           email: data.email,
           password: data.password,
         };

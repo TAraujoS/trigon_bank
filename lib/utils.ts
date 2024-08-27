@@ -66,6 +66,22 @@ export const formatDateTime = (dateString: Date) => {
   };
 };
 
+export const formatToCPF = (value: string): string => {
+  return value
+    .replace(/\D/g, "")
+    .replace(/(\d{3})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+};
+
+export const formatToDate = (value: string): string => {
+  return value
+    .replace(/\D/g, "")
+    .replace(/(\d{2})(\d)/, "$1/$2")
+    .replace(/(\d{2})(\d)/, "$1/$2")
+    .replace(/(\d{4})(\d)/, "$1");
+};
+
 export const mockAccount = {
   totalBanks: 1,
   totalCurrentBalance: 199,
@@ -190,14 +206,26 @@ export const mockPlaidAccount = {
     request_id: "C3IZlexgvNTSukt",
   },
 };
-export function formatAmount(amount: number): string {
-  const formatter = new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-    minimumFractionDigits: 2,
-  });
+export function formatAmount(amount: number | string): string {
+  if (typeof amount === "string") {
+    const numericValue = amount.replace(/\D/g, "");
+    const formattedValue = (Number(numericValue) / 100).toLocaleString(
+      "pt-BR",
+      {
+        style: "currency",
+        currency: "BRL",
+      }
+    );
+    return formattedValue;
+  } else {
+    const formatter = new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+      minimumFractionDigits: 2,
+    });
 
-  return formatter.format(amount);
+    return formatter.format(amount);
+  }
 }
 
 export const parseStringify = (value: any) => JSON.parse(JSON.stringify(value));

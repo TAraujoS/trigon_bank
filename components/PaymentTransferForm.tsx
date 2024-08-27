@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { getBank, getBankByAccountId } from "@/lib/actions/user.actions";
-import { decryptId } from "@/lib/utils";
+import { decryptId, formatAmount } from "@/lib/utils";
 
 import { Button } from "./ui/button";
 import {
@@ -26,11 +26,11 @@ import { BankDropdown } from "./BankDropdown";
 import { createTransaction } from "@/lib/actions/transaction.actions";
 
 const formSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  name: z.string().min(4, "Transfer note is too short"),
-  amount: z.string().min(4, "Amount is too short"),
-  senderBank: z.string().min(4, "Please select a valid bank account"),
-  sharableId: z.string().min(8, "Please select a valid sharable Id"),
+  email: z.string().email("Endereço de email inválido"),
+  name: z.string().min(4, "Nota de transferência muito curta"),
+  amount: z.string().min(4, "Valor muito curto"),
+  senderBank: z.string().min(4, "Por favor insira um banco de origem"),
+  sharableId: z.string().min(8, "Por favor insira um ID de transação válido"),
 });
 
 const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
@@ -140,7 +140,7 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
                 <div className="flex w-full flex-col">
                   <FormControl>
                     <Textarea
-                      placeholder="Write a short note here"
+                      placeholder="Escreva uma pequena nota de transação"
                       className="input-class"
                       {...field}
                     />
@@ -197,7 +197,7 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
                 <div className="flex w-full flex-col">
                   <FormControl>
                     <Input
-                      placeholder="Enter the public account number"
+                      placeholder="Adicione o número da conta"
                       className="input-class"
                       {...field}
                     />
@@ -221,9 +221,13 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
                 <div className="flex w-full flex-col">
                   <FormControl>
                     <Input
-                      placeholder="ex: 5.00"
+                      placeholder="ex: R$ 5,00"
                       className="input-class"
                       {...field}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        field.onChange(formatAmount(value));
+                      }}
                     />
                   </FormControl>
                   <FormMessage className="text-12 text-red-500" />
@@ -241,7 +245,7 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
                 Enviando...
               </>
             ) : (
-              "Transfer Funds"
+              "Transferir Pagamento"
             )}
           </Button>
         </div>
