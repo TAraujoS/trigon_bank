@@ -12,3 +12,59 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum AccountType {
+  SAVINGS
+  CHECKING
+}
+
+model User {
+  id            Int     @id @default(autoincrement())
+  email         String  @unique
+  password      String
+  firstName     String
+  lastName      String
+  city          String
+  state         String
+  dateOfBirth   String
+  cpf           String   @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  banks         Bank[]
+}
+
+model Bank {
+  id          Int        @id @default(autoincrement())
+  bankName    String
+  sharableId  Int        @unique
+  userId      Int
+  user        User       @relation(fields: [userId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  accounts    Account[]
+}
+
+model Account {
+  id             Int         @id @default(autoincrement())
+  currentBalance Int
+  mask           String
+  accountType    AccountType
+  bankId         Int
+  bank           Bank        @relation(fields: [bankId], references: [id])
+  createdAt      DateTime    @default(now())
+  transactions   Transaction[]
+}
+
+model Transaction {
+  id             Int         @id @default(autoincrement())
+  name           String
+  amount         Int
+  category       String
+  accountId      Int
+  account        Account     @relation(fields: [accountId], references: [id])
+  createdAt      DateTime    @default(now())
+  senderId       Int?
+  senderBankId   Int?
+  receiverId     Int?
+  receiverBankId Int?
+}
