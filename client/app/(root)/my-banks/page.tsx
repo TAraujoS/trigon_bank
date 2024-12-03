@@ -1,12 +1,13 @@
-import BankCard from "@/components/BankCard";
-import HeaderBox from "@/components/HeaderBox";
-import { getAccounts } from "@/lib/actions/bank.actions";
-import { getLoggedInUser } from "@/lib/actions/user.actions";
-import React from "react";
+import React from "react"
+
+import { getAccounts } from "@/lib/actions/bank.actions"
+import { getLoggedInUser } from "@/lib/actions/user.actions"
+import BankCard from "@/components/BankCard"
+import HeaderBox from "@/components/HeaderBox"
 
 const MyBanks = async () => {
-  const loggedIn = await getLoggedInUser();
-  const accounts = await getAccounts({ userId: loggedIn?.$id });
+  const loggedIn = await getLoggedInUser()
+  const accounts = await getAccounts({ userId: loggedIn?.$id })
 
   return (
     <section className="flex">
@@ -30,7 +31,7 @@ const MyBanks = async () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default MyBanks;
+export default MyBanks

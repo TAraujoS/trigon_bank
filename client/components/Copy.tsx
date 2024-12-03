@@ -1,19 +1,20 @@
-"use client";
-import { useState } from "react";
+"use client"
 
-import { Button } from "./ui/button";
+import { useState } from "react"
+
+import { Button } from "./ui/button"
 
 const Copy = ({ title }: { title: string }) => {
-  const [hasCopied, setHasCopied] = useState(false);
+  const [hasCopied, setHasCopied] = useState(false)
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(title);
-    setHasCopied(true);
+    navigator.clipboard.writeText(title)
+    setHasCopied(true)
 
     setTimeout(() => {
-      setHasCopied(false);
-    }, 2000);
-  };
+      setHasCopied(false)
+    }, 2000)
+  }
 
   return (
     <Button
@@ -59,7 +60,7 @@ const Copy = ({ title }: { title: string }) => {
         </svg>
       )}
     </Button>
-  );
-};
+  )
+}
 
-export default Copy;
+export default Copy

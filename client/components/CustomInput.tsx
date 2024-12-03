@@ -1,17 +1,19 @@
-import React from "react";
-import { FormControl, FormField, FormLabel, FormMessage } from "./ui/form";
-import { Input } from "./ui/input";
-import { Control, FieldPath } from "react-hook-form";
-import { z } from "zod";
-import { authFormSchema, formatToCPF, formatToDate } from "@/lib/utils";
+import React from "react"
+import { Control, FieldPath } from "react-hook-form"
+import { z } from "zod"
 
-const formSchema = authFormSchema("sign-up");
+import { authFormSchema, formatToCPF, formatToDate } from "@/lib/utils"
+
+import { FormControl, FormField, FormLabel, FormMessage } from "./ui/form"
+import { Input } from "./ui/input"
+
+const formSchema = authFormSchema("sign-up")
 
 interface CustomInoputProps {
-  control: Control<z.infer<typeof formSchema>>;
-  name: FieldPath<z.infer<typeof formSchema>>;
-  label: string;
-  placeholder: string;
+  control: Control<z.infer<typeof formSchema>>
+  name: FieldPath<z.infer<typeof formSchema>>
+  label: string
+  placeholder: string
 }
 const CustomInput = ({
   control,
@@ -34,13 +36,13 @@ const CustomInput = ({
                 placeholder={placeholder}
                 className="input-class"
                 onChange={(e) => {
-                  const value = e.target.value;
+                  const value = e.target.value
                   if (name === "cpf") {
-                    field.onChange(formatToCPF(value));
+                    field.onChange(formatToCPF(value))
                   } else if (name === "dateOfBirth") {
-                    field.onChange(formatToDate(value));
+                    field.onChange(formatToDate(value))
                   } else {
-                    field.onChange(value);
+                    field.onChange(value)
                   }
                 }}
               />
@@ -50,7 +52,7 @@ const CustomInput = ({
         </div>
       )}
     />
-  );
-};
+  )
+}
 
-export default CustomInput;
+export default CustomInput

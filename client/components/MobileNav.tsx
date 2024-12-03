@@ -1,19 +1,22 @@
-"use client";
+"use client"
+
+import Image from "next/image"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { sidebarLinks } from "@/constants"
+
+import { cn } from "@/lib/utils"
 import {
   Sheet,
   SheetClose,
   SheetContent,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import { sidebarLinks } from "@/constants";
-import { cn } from "@/lib/utils";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import Footer from "./Footer";
+} from "@/components/ui/sheet"
+
+import Footer from "./Footer"
 
 const MobileNav = ({ user }: MobileNavProps) => {
-  const pathname = usePathname();
+  const pathname = usePathname()
   return (
     <section className="w-full max-w-[264px]">
       <Sheet>
@@ -42,7 +45,7 @@ const MobileNav = ({ user }: MobileNavProps) => {
                 {sidebarLinks.map((item) => {
                   const isActive =
                     pathname === item.route ||
-                    pathname.startsWith(`${item.route}/`);
+                    pathname.startsWith(`${item.route}/`)
                   return (
                     <SheetClose asChild key={item.route}>
                       <Link
@@ -71,7 +74,7 @@ const MobileNav = ({ user }: MobileNavProps) => {
                         </p>
                       </Link>
                     </SheetClose>
-                  );
+                  )
                 })}
               </nav>
             </SheetClose>
@@ -80,7 +83,7 @@ const MobileNav = ({ user }: MobileNavProps) => {
         </SheetContent>
       </Sheet>
     </section>
-  );
-};
+  )
+}
 
-export default MobileNav;
+export default MobileNav

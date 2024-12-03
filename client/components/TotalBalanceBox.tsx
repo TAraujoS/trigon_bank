@@ -1,7 +1,8 @@
-import React from "react";
+import React from "react"
 
-import AnimatedCounter from "./AnimatedCounter";
-import DoughnutChart from "./DoughnutChart";
+import AnimatedCounter from "./AnimatedCounter"
+import DoughnutChart from "./DoughnutChart"
+
 function TotalBalanceBox({
   accounts = [],
   totalBanks,
@@ -22,7 +23,7 @@ function TotalBalanceBox({
         </div>
       </div>
     </section>
-  );
+  )
 }
 
-export default TotalBalanceBox;
+export default TotalBalanceBox

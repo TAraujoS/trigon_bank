@@ -1,27 +1,29 @@
-"use client";
-import Image from "next/image";
-import Link from "next/link";
-import React, { useState } from "react";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import CustomInput from "./CustomInput";
-import { authFormSchema } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
+"use client"
 
-import { signIn, signUp } from "@/lib/actions/user.actions";
-import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import { AppwriteException } from "node-appwrite";
+import React, { useState } from "react"
+import Image from "next/image"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Loader2 } from "lucide-react"
+import { AppwriteException } from "node-appwrite"
+import { useForm } from "react-hook-form"
+import toast from "react-hot-toast"
+import { z } from "zod"
+
+import { signIn, signUp } from "@/lib/actions/user.actions"
+import { authFormSchema } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Form } from "@/components/ui/form"
+
+import CustomInput from "./CustomInput"
 
 const AuthForm = ({ type }: { type: string }) => {
-  const router = useRouter();
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const router = useRouter()
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(false)
 
-  const formSchema = authFormSchema(type);
+  const formSchema = authFormSchema(type)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -29,10 +31,10 @@ const AuthForm = ({ type }: { type: string }) => {
       email: "",
       password: "",
     },
-  });
+  })
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    setLoading(true);
+    setLoading(true)
     try {
       if (type === "sign-up") {
         const userData = {
@@ -44,35 +46,35 @@ const AuthForm = ({ type }: { type: string }) => {
           cpf: data.cpf!.replace(/\D/g, ""),
           email: data.email,
           password: data.password,
-        };
-        const newUser = await signUp(userData);
-        setUser(newUser);
-        if (newUser) router.push("/sign-in");
+        }
+        const newUser = await signUp(userData)
+        setUser(newUser)
+        if (newUser) router.push("/sign-in")
       }
 
       if (type === "sign-in") {
         const response = await signIn({
           email: data.email,
           password: data.password,
-        });
+        })
         if (response) {
-          router.push("/");
-          toast.success("Login efetuado com sucesso!");
+          router.push("/")
+          toast.success("Login efetuado com sucesso!")
         }
       }
     } catch (error: AppwriteException | any) {
-      console.log(error);
+      console.log(error)
       if (error.message === "user_invalid_credentials") {
-        toast.error("Email ou senha inválidos. Tente novamente!");
+        toast.error("Email ou senha inválidos. Tente novamente!")
       } else if (error.message === "user_already_exists") {
-        toast.error("Já existe uma conta com esse email. Tente novamente!");
+        toast.error("Já existe uma conta com esse email. Tente novamente!")
       } else {
-        toast.error("Erro ao efetuar login. Tente novamente!");
+        toast.error("Erro ao efetuar login. Tente novamente!")
       }
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <section className="auth-form">
@@ -187,7 +189,7 @@ const AuthForm = ({ type }: { type: string }) => {
         </footer>
       </Form>
     </section>
-  );
-};
+  )
+}
 
-export default AuthForm;
+export default AuthForm

@@ -1,17 +1,18 @@
-import { logoutAccount } from "@/lib/actions/user.actions";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React from "react";
+import React from "react"
+import Image from "next/image"
+import { useRouter } from "next/navigation"
+
+import { logoutAccount } from "@/lib/actions/user.actions"
 
 function Footer({ user, type = "desktop" }: FooterProps) {
-  const router = useRouter();
+  const router = useRouter()
   const handleLogout = async () => {
-    const loggedOut = await logoutAccount();
+    const loggedOut = await logoutAccount()
 
     if (loggedOut) {
-      router.push("/sign-in");
+      router.push("/sign-in")
     }
-  };
+  }
   return (
     <footer className="footer">
       <div className={type === "mobile" ? "footer_name-mobile" : "footer_name"}>
@@ -33,7 +34,7 @@ function Footer({ user, type = "desktop" }: FooterProps) {
         <Image src="/icons/logout.svg" fill alt="logout" />
       </div>
     </footer>
-  );
+  )
 }
 
-export default Footer;
+export default Footer

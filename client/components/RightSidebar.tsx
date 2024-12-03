@@ -1,12 +1,14 @@
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
-import BankCard from "./BankCard";
-import { countTransactionCategories } from "@/lib/utils";
-import Category from "./Category";
+import React from "react"
+import Image from "next/image"
+import Link from "next/link"
+
+import { countTransactionCategories } from "@/lib/utils"
+
+import BankCard from "./BankCard"
+import Category from "./Category"
 
 const RightSidebar = ({ user, transactions, banks }: RightSidebarProps) => {
-  const categories: CategoryCount[] = countTransactionCategories(transactions);
+  const categories: CategoryCount[] = countTransactionCategories(transactions)
 
   return (
     <aside className="right-sidebar">
@@ -70,7 +72,7 @@ const RightSidebar = ({ user, transactions, banks }: RightSidebarProps) => {
         )}
       </section>
     </aside>
-  );
-};
+  )
+}
 
-export default RightSidebar;
+export default RightSidebar

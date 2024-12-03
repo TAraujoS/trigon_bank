@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 function HeaderBox({ type = "title", title, subtext, user }: HeaderBoxProps) {
   return (
@@ -11,7 +11,7 @@ function HeaderBox({ type = "title", title, subtext, user }: HeaderBoxProps) {
       </h1>
       <p className="header-box-subtext">{subtext}</p>
     </div>
-  );
+  )
 }
 
-export default HeaderBox;
+export default HeaderBox

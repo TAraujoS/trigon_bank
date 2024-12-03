@@ -1,9 +1,10 @@
-"use client";
+"use client"
 
-import Image from "next/image";
-import { useSearchParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState } from "react"
+import Image from "next/image"
+import { useRouter, useSearchParams } from "next/navigation"
 
+import { formatAmount, formUrlQuery } from "@/lib/utils"
 import {
   Select,
   SelectContent,
@@ -11,33 +12,32 @@ import {
   SelectItem,
   SelectLabel,
   SelectTrigger,
-} from "@/components/ui/select";
-import { formUrlQuery, formatAmount } from "@/lib/utils";
+} from "@/components/ui/select"
 
 export const BankDropdown = ({
   accounts = [],
   setValue,
   otherStyles,
 }: BankDropdownProps) => {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const [selected, setSeclected] = useState(accounts[0]);
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const [selected, setSeclected] = useState(accounts[0])
 
   const handleBankChange = (id: string) => {
-    const account = accounts.find((account) => account.appwriteItemId === id)!;
+    const account = accounts.find((account) => account.appwriteItemId === id)!
 
-    setSeclected(account);
+    setSeclected(account)
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       key: "id",
       value: id,
-    });
-    router.push(newUrl, { scroll: false });
+    })
+    router.push(newUrl, { scroll: false })
 
     if (setValue) {
-      setValue("senderBank", id);
+      setValue("senderBank", id)
     }
-  };
+  }
 
   return (
     <Select
@@ -80,5 +80,5 @@ export const BankDropdown = ({
         </SelectGroup>
       </SelectContent>
     </Select>
-  );
-};
+  )
+}

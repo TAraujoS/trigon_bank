@@ -1,9 +1,9 @@
-import Image from "next/image";
+import Image from "next/image"
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <main className="flex mon-h-screen w-full justify-between font-inter">
@@ -18,5 +18,5 @@ export default function RootLayout({
         </div>
       </div>
     </main>
-  );
+  )
 }

@@ -1,21 +1,21 @@
-"use server";
+"use server"
 
-import { Query } from "node-appwrite";
-import { parseStringify } from "../utils";
+import { Query } from "node-appwrite"
 
-import { getTransactionsByBankId } from "./transaction.actions";
-import { getBanks, getBank } from "./user.actions";
-import { createAdminClient } from "../appwrite";
+import { createAdminClient } from "../appwrite"
+import { parseStringify } from "../utils"
+import { getTransactionsByBankId } from "./transaction.actions"
+import { getBank, getBanks } from "./user.actions"
 
 const {
   APPWRITE_DATABASE_ID: DATABASE_ID,
   APPWRITE_ACCOUNT_COLLECTION_ID: ACCOUNT_COLLECTION_ID,
-} = process.env;
+} = process.env
 
 export const getAccounts = async ({ userId }: getAccountsProps) => {
   try {
-    const banks = await getBanks({ userId });
-    const { database } = await createAdminClient();
+    const banks = await getBanks({ userId })
+    const { database } = await createAdminClient()
 
     const accounts = await Promise.all(
       banks?.documents.map(async (bank: Bank) => {
@@ -23,12 +23,12 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
           DATABASE_ID!,
           ACCOUNT_COLLECTION_ID!,
           [Query.equal("bankId", [bank.$id])]
-        );
+        )
 
-        const accountData = accountsResponse.documents[0];
-        console.log(accountsResponse);
-        console.log(accountData);
-        console.log(bank);
+        const accountData = accountsResponse.documents[0]
+        console.log(accountsResponse)
+        console.log(accountData)
+        console.log(bank)
         const account = {
           id: accountData.accountId,
           currentBalance: accountData.currentBalance,
@@ -37,42 +37,42 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
           accountType: accountData.accountType,
           appwriteItemId: bank.bankId,
           sharableId: bank.sharableId,
-        };
-        console.log(account);
-        return account;
+        }
+        console.log(account)
+        return account
       })
-    );
-    console.log(accounts);
-    const totalBanks = accounts.length;
+    )
+    console.log(accounts)
+    const totalBanks = accounts.length
     const totalCurrentBalance = accounts.reduce((total, account) => {
-      return total + account.currentBalance;
-    }, 0);
+      return total + account.currentBalance
+    }, 0)
 
-    return parseStringify({ data: accounts, totalBanks, totalCurrentBalance });
+    return parseStringify({ data: accounts, totalBanks, totalCurrentBalance })
   } catch (error) {
-    console.error("An error occurred while getting the accounts:", error);
+    console.error("An error occurred while getting the accounts:", error)
   }
-};
+}
 
 export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
   try {
-    const bank = await getBank({ documentId: appwriteItemId });
-    console.log(bank);
-    const { database } = await createAdminClient();
+    const bank = await getBank({ documentId: appwriteItemId })
+    console.log(bank)
+    const { database } = await createAdminClient()
 
     const accountsResponse = await database.listDocuments(
       DATABASE_ID!,
       ACCOUNT_COLLECTION_ID!,
       [Query.equal("bankId", [bank.$id])]
-    );
+    )
 
-    console.log(accountsResponse);
-    const accountData = accountsResponse.documents[0];
+    console.log(accountsResponse)
+    const accountData = accountsResponse.documents[0]
 
     const transferTransactionsData = await getTransactionsByBankId({
       bankId: accountData.accountId,
-    });
-    console.log(transferTransactionsData);
+    })
+    console.log(transferTransactionsData)
     const transferTransactions = transferTransactionsData.documents.map(
       (transferData: Transaction) => ({
         id: transferData.$id,
@@ -83,14 +83,14 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
         category: transferData.category,
         type: transferData.senderBankId === bank.$id ? "debit" : "credit",
       })
-    );
+    )
 
-    console.log(transferTransactions);
+    console.log(transferTransactions)
     const transactions = await getTransactions({
       accessToken: bank?.accessToken,
-    });
+    })
 
-    console.log(transactions);
+    console.log(transactions)
     const account = {
       id: accountData.account_id,
       availableBalance: accountData.balances.available!,
@@ -102,26 +102,26 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
       type: accountData.accountType as string,
       // subtype: accountData.subtype! as string,
       appwriteItemId: bank.$id,
-    };
+    }
 
     const allTransactions = [...transactions, ...transferTransactions].sort(
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
+    )
 
     return parseStringify({
       data: account,
       transactions: allTransactions,
-    });
+    })
   } catch (error) {
-    console.error("An error occurred while getting the account:", error);
+    console.error("An error occurred while getting the account:", error)
   }
-};
+}
 
 export const getTransactions = async ({
   accessToken,
 }: getTransactionsProps) => {
-  let hasMore = true;
-  let transactions: any = [];
+  let hasMore = true
+  let transactions: any = []
 
   try {
     // while (hasMore) {
@@ -147,8 +147,8 @@ export const getTransactions = async ({
     //   hasMore = data.has_more;
     // }
 
-    return parseStringify(transactions);
+    return parseStringify(transactions)
   } catch (error) {
-    console.error("An error occurred while getting the accounts:", error);
+    console.error("An error occurred while getting the accounts:", error)
   }
-};
+}

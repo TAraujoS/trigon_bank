@@ -1,22 +1,22 @@
-"use client";
+"use client"
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation"
 
-import { cn, formUrlQuery } from "@/lib/utils";
+import { cn, formUrlQuery } from "@/lib/utils"
 
 export const BankTabItem = ({ account, appwriteItemId }: BankTabItemProps) => {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const isActive = appwriteItemId === account?.appwriteItemId;
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const isActive = appwriteItemId === account?.appwriteItemId
 
   const handleBankChange = () => {
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       key: "id",
       value: account?.appwriteItemId,
-    });
-    router.push(newUrl, { scroll: false });
-  };
+    })
+    router.push(newUrl, { scroll: false })
+  }
 
   return (
     <div
@@ -33,5 +33,5 @@ export const BankTabItem = ({ account, appwriteItemId }: BankTabItemProps) => {
         {account.name}
       </p>
     </div>
-  );
-};
+  )
+}

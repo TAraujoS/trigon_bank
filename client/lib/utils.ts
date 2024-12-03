@@ -1,11 +1,11 @@
 /* eslint-disable no-prototype-builtins */
-import { type ClassValue, clsx } from "clsx";
-import qs from "query-string";
-import { twMerge } from "tailwind-merge";
-import { z } from "zod";
+import { clsx, type ClassValue } from "clsx"
+import qs from "query-string"
+import { twMerge } from "tailwind-merge"
+import { z } from "zod"
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs))
 }
 
 // FORMAT DATE TIME
@@ -17,70 +17,70 @@ export const formatDateTime = (dateString: Date) => {
     hour: "numeric", // numeric hour (e.g., '8')
     minute: "numeric", // numeric minute (e.g., '30')
     hour12: true, // use 12-hour clock (true) or 24-hour clock (false)
-  };
+  }
 
   const dateDayOptions: Intl.DateTimeFormatOptions = {
     weekday: "short", // abbreviated weekday name (e.g., 'Mon')
     year: "numeric", // numeric year (e.g., '2023')
     month: "2-digit", // abbreviated month name (e.g., 'Oct')
     day: "2-digit", // numeric day of the month (e.g., '25')
-  };
+  }
 
   const dateOptions: Intl.DateTimeFormatOptions = {
     month: "short", // abbreviated month name (e.g., 'Oct')
     year: "numeric", // numeric year (e.g., '2023')
     day: "numeric", // numeric day of the month (e.g., '25')
-  };
+  }
 
   const timeOptions: Intl.DateTimeFormatOptions = {
     hour: "numeric", // numeric hour (e.g., '8')
     minute: "numeric", // numeric minute (e.g., '30')
     hour12: true, // use 12-hour clock (true) or 24-hour clock (false)
-  };
+  }
 
   const formattedDateTime: string = new Date(dateString).toLocaleString(
     "pt-BR",
     dateTimeOptions
-  );
+  )
 
   const formattedDateDay: string = new Date(dateString).toLocaleString(
     "pt-BR",
     dateDayOptions
-  );
+  )
 
   const formattedDate: string = new Date(dateString).toLocaleString(
     "pt-BR",
     dateOptions
-  );
+  )
 
   const formattedTime: string = new Date(dateString).toLocaleString(
     "pt-BR",
     timeOptions
-  );
+  )
 
   return {
     dateTime: formattedDateTime,
     dateDay: formattedDateDay,
     dateOnly: formattedDate,
     timeOnly: formattedTime,
-  };
-};
+  }
+}
 
 export const formatToCPF = (value: string): string => {
   return value
     .replace(/\D/g, "")
     .replace(/(\d{3})(\d)/, "$1.$2")
     .replace(/(\d{3})(\d)/, "$1.$2")
-    .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-};
+    .replace(/(\d{3})(\d{1,2})$/, "$1-$2")
+}
 
 export const formatToDate = (value: string): string => {
   return value
     .replace(/\D/g, "")
     .replace(/(\d{2})(\d)/, "$1/$2")
     .replace(/(\d{2})(\d)/, "$1/$2")
-    .replace(/(\d{4})(\d)/, "$1");
-};
+    .replace(/(\d{4})(\d)/, "$1")
+}
 
 export const mockAccount = {
   totalBanks: 1,
@@ -138,7 +138,7 @@ export const mockAccount = {
       category_id: "19047000",
     },
   ],
-};
+}
 export const mockPlaidAccount = {
   data: {
     accounts: [
@@ -205,45 +205,45 @@ export const mockPlaidAccount = {
     },
     request_id: "C3IZlexgvNTSukt",
   },
-};
+}
 export function formatAmount(amount: number | string): string {
   if (typeof amount === "string") {
-    const numericValue = amount.replace(/\D/g, "");
+    const numericValue = amount.replace(/\D/g, "")
     const formattedValue = (Number(numericValue) / 100).toLocaleString(
       "pt-BR",
       {
         style: "currency",
         currency: "BRL",
       }
-    );
-    return formattedValue;
+    )
+    return formattedValue
   } else {
     const formatter = new Intl.NumberFormat("pt-BR", {
       style: "currency",
       currency: "BRL",
       minimumFractionDigits: 2,
-    });
+    })
 
-    return formatter.format(amount);
+    return formatter.format(amount)
   }
 }
 
-export const parseStringify = (value: any) => JSON.parse(JSON.stringify(value));
+export const parseStringify = (value: any) => JSON.parse(JSON.stringify(value))
 
 export const removeSpecialCharacters = (value: string) => {
-  return value.replace(/[^\w\s]/gi, "");
-};
+  return value.replace(/[^\w\s]/gi, "")
+}
 
 interface UrlQueryParams {
-  params: string;
-  key: string;
-  value: string;
+  params: string
+  key: string
+  value: string
 }
 
 export function formUrlQuery({ params, key, value }: UrlQueryParams) {
-  const currentUrl = qs.parse(params);
+  const currentUrl = qs.parse(params)
 
-  currentUrl[key] = value;
+  currentUrl[key] = value
 
   return qs.stringifyUrl(
     {
@@ -251,7 +251,7 @@ export function formUrlQuery({ params, key, value }: UrlQueryParams) {
       query: currentUrl,
     },
     { skipNull: true }
-  );
+  )
 }
 
 export function getAccountTypeColors(type: AccountTypes) {
@@ -262,7 +262,7 @@ export function getAccountTypeColors(type: AccountTypes) {
         lightBg: "bg-blue-100",
         title: "text-blue-900",
         subText: "text-blue-700",
-      };
+      }
 
     case "credit":
       return {
@@ -270,7 +270,7 @@ export function getAccountTypeColors(type: AccountTypes) {
         lightBg: "bg-success-100",
         title: "text-success-900",
         subText: "text-success-700",
-      };
+      }
 
     default:
       return {
@@ -278,27 +278,27 @@ export function getAccountTypeColors(type: AccountTypes) {
         lightBg: "bg-green-100",
         title: "text-green-900",
         subText: "text-green-700",
-      };
+      }
   }
 }
 
 export function countTransactionCategories(
   transactions: Transaction[]
 ): CategoryCount[] {
-  const categoryCounts: { [category: string]: number } = {};
-  let totalCount = 0;
+  const categoryCounts: { [category: string]: number } = {}
+  let totalCount = 0
 
   transactions &&
     transactions.forEach((transaction) => {
-      const category = transaction.category;
+      const category = transaction.category
 
       if (categoryCounts.hasOwnProperty(category)) {
-        categoryCounts[category]++;
+        categoryCounts[category]++
       } else {
-        categoryCounts[category] = 1;
+        categoryCounts[category] = 1
       }
-      totalCount++;
-    });
+      totalCount++
+    })
 
   const aggregatedCategories: CategoryCount[] = Object.keys(categoryCounts).map(
     (category) => ({
@@ -306,36 +306,36 @@ export function countTransactionCategories(
       count: categoryCounts[category],
       totalCount,
     })
-  );
+  )
 
-  aggregatedCategories.sort((a, b) => b.count - a.count);
+  aggregatedCategories.sort((a, b) => b.count - a.count)
 
-  return aggregatedCategories;
+  return aggregatedCategories
 }
 
 export function extractCustomerIdFromUrl(url: string) {
-  const parts = url.split("/");
+  const parts = url.split("/")
 
-  const customerId = parts[parts.length - 1];
+  const customerId = parts[parts.length - 1]
 
-  return customerId;
+  return customerId
 }
 
 export function encryptId(id: string) {
-  return btoa(id);
+  return btoa(id)
 }
 
 export function decryptId(id: string) {
-  return atob(id);
+  return atob(id)
 }
 
 export const getTransactionStatus = (date: Date) => {
-  const today = new Date();
-  const twoDaysAgo = new Date(today);
-  twoDaysAgo.setDate(today.getDate() - 2);
+  const today = new Date()
+  const twoDaysAgo = new Date(today)
+  twoDaysAgo.setDate(today.getDate() - 2)
 
-  return date > twoDaysAgo ? "Processando" : "Sucesso";
-};
+  return date > twoDaysAgo ? "Processando" : "Sucesso"
+}
 
 export const authFormSchema = (type: string) =>
   z.object({
@@ -381,4 +381,4 @@ export const authFormSchema = (type: string) =>
     password: z
       .string()
       .min(8, { message: "Senha deve ter pelo menos 8 caracteres." }),
-  });
+  })

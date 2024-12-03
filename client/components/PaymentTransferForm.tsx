@@ -1,16 +1,18 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Loader2 } from "lucide-react"
+import { useForm } from "react-hook-form"
+import * as z from "zod"
 
-import { getBank, getBankByAccountId } from "@/lib/actions/user.actions";
-import { decryptId, formatAmount } from "@/lib/utils";
+import { createTransaction } from "@/lib/actions/transaction.actions"
+import { getBank, getBankByAccountId } from "@/lib/actions/user.actions"
+import { decryptId, formatAmount } from "@/lib/utils"
 
-import { Button } from "./ui/button";
+import { BankDropdown } from "./BankDropdown"
+import { Button } from "./ui/button"
 import {
   Form,
   FormControl,
@@ -19,11 +21,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
-import { BankDropdown } from "./BankDropdown";
-import { createTransaction } from "@/lib/actions/transaction.actions";
+} from "./ui/form"
+import { Input } from "./ui/input"
+import { Textarea } from "./ui/textarea"
 
 const formSchema = z.object({
   email: z.string().email("Endereço de email inválido"),
@@ -31,11 +31,11 @@ const formSchema = z.object({
   amount: z.string().min(4, "Valor muito curto"),
   senderBank: z.string().min(4, "Por favor insira um banco de origem"),
   sharableId: z.string().min(8, "Por favor insira um ID de transação válido"),
-});
+})
 
 const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,17 +46,17 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
       senderBank: "",
       sharableId: "",
     },
-  });
+  })
 
   const submit = async (data: z.infer<typeof formSchema>) => {
-    setIsLoading(true);
+    setIsLoading(true)
 
     try {
-      const receiverAccountId = decryptId(data.sharableId);
+      const receiverAccountId = decryptId(data.sharableId)
       const receiverBank = await getBankByAccountId({
         accountId: receiverAccountId,
-      });
-      const senderBank = await getBank({ documentId: data.senderBank });
+      })
+      const senderBank = await getBank({ documentId: data.senderBank })
 
       // const transferParams = {
       //   sourceFundingSourceUrl: senderBank.fundingSourceUrl,
@@ -64,7 +64,7 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
       //   amount: data.amount,
       // };
       // const transfer = await createTransfer(transferParams);
-      const transfer = true;
+      const transfer = true
       if (transfer) {
         const transaction = {
           name: data.name,
@@ -74,21 +74,21 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
           receiverId: receiverBank.userId.$id,
           receiverBankId: receiverBank.$id,
           email: data.email,
-        };
+        }
 
-        const newTransaction = await createTransaction(transaction);
+        const newTransaction = await createTransaction(transaction)
 
         if (newTransaction) {
-          form.reset();
-          router.push("/");
+          form.reset()
+          router.push("/")
         }
       }
     } catch (error) {
-      console.error("Submitting create transfer request failed: ", error);
+      console.error("Submitting create transfer request failed: ", error)
     }
 
-    setIsLoading(false);
-  };
+    setIsLoading(false)
+  }
 
   return (
     <Form {...form}>
@@ -225,8 +225,8 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
                       className="input-class"
                       {...field}
                       onChange={(e) => {
-                        const value = e.target.value;
-                        field.onChange(formatAmount(value));
+                        const value = e.target.value
+                        field.onChange(formatAmount(value))
                       }}
                     />
                   </FormControl>
@@ -251,7 +251,7 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
         </div>
       </form>
     </Form>
-  );
-};
+  )
+}
 
-export default PaymentTransferForm;
+export default PaymentTransferForm

@@ -1,31 +1,31 @@
-"use client";
+"use client"
 
-import Image from "next/image";
-import { useSearchParams, useRouter } from "next/navigation";
+import Image from "next/image"
+import { useRouter, useSearchParams } from "next/navigation"
 
 import {
   cn,
-  formUrlQuery,
   formatAmount,
+  formUrlQuery,
   getAccountTypeColors,
-} from "@/lib/utils";
+} from "@/lib/utils"
 
 const BankInfo = ({ account, appwriteItemId, type }: BankInfoProps) => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
-  const isActive = appwriteItemId === account?.appwriteItemId;
+  const isActive = appwriteItemId === account?.appwriteItemId
 
   const handleBankChange = () => {
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       key: "id",
       value: account?.appwriteItemId,
-    });
-    router.push(newUrl, { scroll: false });
-  };
+    })
+    router.push(newUrl, { scroll: false })
+  }
 
-  const colors = getAccountTypeColors(account?.type as AccountTypes);
+  const colors = getAccountTypeColors(account?.type as AccountTypes)
 
   return (
     <div
@@ -68,7 +68,7 @@ const BankInfo = ({ account, appwriteItemId, type }: BankInfoProps) => {
         </p>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default BankInfo;
+export default BankInfo
