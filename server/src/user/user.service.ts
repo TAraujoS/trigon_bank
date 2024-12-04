@@ -27,6 +27,16 @@ export class UserService {
     return user;
   }
 
+  findOne(userId: number) {
+    const user = this.databaseService.user.findUnique({
+      where: { id: userId },
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
+  }
+
   async update(id: number, updateEmployeeDto: Prisma.UserUpdateInput) {
     return await this.databaseService.user.update({
       where: { id },
