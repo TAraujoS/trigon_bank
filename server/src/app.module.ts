@@ -5,6 +5,8 @@ import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
+import { BankModule } from './bank/bank.module';
+import { AccountModule } from './account/account.module';
 
 @Module({
   imports: [
@@ -12,6 +14,8 @@ import { ConfigModule } from '@nestjs/config';
     AuthModule,
     UserModule,
     ConfigModule.forRoot({ isGlobal: true }),
+    BankModule,
+    AccountModule,
   ],
   controllers: [AppController],
   providers: [AppService],
