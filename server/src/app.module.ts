@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { BankModule } from './bank/bank.module';
 import { AccountModule } from './account/account.module';
+import { TransactionModule } from './transaction/transaction.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AccountModule } from './account/account.module';
     ConfigModule.forRoot({ isGlobal: true }),
     BankModule,
     AccountModule,
+    TransactionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
