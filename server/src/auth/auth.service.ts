@@ -80,4 +80,12 @@ export class AuthService {
     const { accessToken, refreshToken } = await this.generateToken(userId);
     return { id: userId, name: name, refreshToken, accessToken };
   }
+
+  async validateGoogleUser(googleUser: CreateUserAuthDto) {
+    const user = await this.userService.findByEmail(googleUser.email);
+    if (user) {
+      return user;
+    }
+    return await this.userService.create(googleUser);
+  }
 }
