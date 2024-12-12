@@ -47,4 +47,14 @@ export class UserService {
   async remove(id: number) {
     return await this.databaseService.user.delete({ where: { id } });
   }
+
+  async updateHashedRefreshToken(
+    userId: number,
+    hashedRefreshToken: string | null,
+  ) {
+    return await this.databaseService.user.update({
+      where: { id: userId },
+      data: { hashedRefreshToken },
+    });
+  }
 }

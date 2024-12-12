@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateUserAuthDto } from '../user/dto/create-user-auth.dto';
 import { UserService } from 'src/user/user.service';
-import { verify } from 'argon2';
+import { hash, verify } from 'argon2';
 import { AuthJwtPayload } from './types/auth-jwtPayload';
 import { JwtService } from '@nestjs/jwt';
 import refreshConfig from './config/refresh.config';
@@ -20,11 +20,13 @@ export class AuthService {
     @Inject(refreshConfig.KEY)
     private refreshTokenConfig: ConfigType<typeof refreshConfig>,
   ) {}
+
   async registerUser(createUserAuthDto: CreateUserAuthDto) {
     const user = await this.userService.findByEmail(createUserAuthDto.email);
     if (user) {
       throw new ConflictException('User already exists');
     }
+
     return this.userService.create(createUserAuthDto);
   }
 
@@ -38,11 +40,15 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid Credentials');
     }
+
     return { id: user.id, name: user.firstName };
   }
 
   async login(userId: number, name?: string) {
     const { accessToken, refreshToken } = await this.generateToken(userId);
+    const hashedToken = await hash(refreshToken);
+    await this.userService.updateHashedRefreshToken(userId, hashedToken);
+
     return { id: userId, name, accessToken, refreshToken };
   }
 
@@ -64,20 +70,31 @@ export class AuthService {
       throw new UnauthorizedException('User not found');
     }
     const currentUser = { id: user.id };
+
     return currentUser;
   }
 
-  async validateRefreshToken(userId: number) {
+  async validateRefreshToken(userId: number, refreshToken: string) {
     const user = await this.userService.findOne(userId);
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
+
+    const refreshTokenMatches = await verify(
+      user.hashedRefreshToken,
+      refreshToken,
+    );
+    if (!refreshTokenMatches) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+
     const currentUser = { id: user.id };
     return currentUser;
   }
 
   async refreshToken(userId: number, name: string) {
     const { accessToken, refreshToken } = await this.generateToken(userId);
+
     return { id: userId, name: name, refreshToken, accessToken };
   }
 
@@ -86,6 +103,11 @@ export class AuthService {
     if (user) {
       return user;
     }
+
     return await this.userService.create(googleUser);
+  }
+
+  async signout(userId: number) {
+    return await this.userService.updateHashedRefreshToken(userId, null);
   }
 }

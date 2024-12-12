@@ -28,6 +28,7 @@ model User {
   state         String
   dateOfBirth   String
   cpf           String   @unique
+  hashedRefreshToken String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   banks         Bank[]
