@@ -2,15 +2,16 @@
   "extends": [
     "next/core-web-vitals",
     "next/typescript",
-    "plugin:tailwindcss/recommended"
+    "plugin:tailwindcss/recommended",
+    "plugin:react/recommended"
   ],
   "rules": {
     "tailwindcss/classnames-order": "error"
   },
+  "parser": "@typescript-eslint/parser",
   "overrides": [
     {
-      "files": ["*.ts", "*.tsx", "*.js"],
-      "parser": "@typescript-eslint/parser"
+      "files": ["*.ts", "*.tsx", "*.js"]
     }
   ]
 }
