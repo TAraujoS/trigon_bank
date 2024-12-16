@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
@@ -16,20 +17,17 @@ export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Post()
-  create(
-    @Body() accountId: number,
-    createTransactionDto: CreateTransactionDto,
-  ) {
-    return this.transactionService.create(accountId, createTransactionDto);
+  create(@Body() createTransactionDto: CreateTransactionDto) {
+    return this.transactionService.create(createTransactionDto);
   }
 
-  @Get()
-  findAll(@Param('accountId') accountId: number) {
-    return this.transactionService.findAll(accountId);
+  @Get('/account/:accountId')
+  findAll(@Param('accountId', ParseIntPipe) accountId: number) {
+    return this.transactionService.findAllByAccountId(accountId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.transactionService.findOne(id);
   }
 

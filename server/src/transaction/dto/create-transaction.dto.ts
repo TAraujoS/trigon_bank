@@ -10,11 +10,14 @@ export class CreateTransactionDto {
   @IsString()
   category: string;
 
-  @IsString()
+  @IsNumber()
+  accountId: number;
+
+  @IsNumber()
   @IsOptional()
   senderId?: number;
 
-  @IsString()
+  @IsNumber()
   @IsOptional()
   senderBankId?: number;
 

@@ -7,10 +7,14 @@ import { DatabaseService } from 'src/database/database.service';
 export class TransactionService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async create(accountId: number, createTransactionDto: CreateTransactionDto) {
-    const { name, amount, category, senderId, senderBankId } =
-      createTransactionDto;
-
+  async create({
+    name,
+    amount,
+    category,
+    accountId,
+    senderId,
+    senderBankId,
+  }: CreateTransactionDto) {
     const account = await this.databaseService.account.findUnique({
       where: { id: accountId },
     });
@@ -41,7 +45,7 @@ export class TransactionService {
     }
   }
 
-  async findAll(accountId: number) {
+  async findAllByAccountId(accountId: number) {
     const transactions = await this.databaseService.transaction.findMany({
       where: {
         accountId,
