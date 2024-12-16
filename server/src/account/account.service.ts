@@ -19,9 +19,9 @@ export class AccountService {
     });
   }
 
-  async findAllByBankId(bankId: number) {
+  async findAllByBankId(bankId: number, userId: number) {
     const accounts = await this.databaseService.account.findMany({
-      where: { bankId },
+      where: { bankId, bank: { userId } },
     });
 
     if (accounts.length === 0) {
@@ -30,9 +30,9 @@ export class AccountService {
     return accounts;
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, userId: number) {
     const account = await this.databaseService.account.findUnique({
-      where: { id },
+      where: { id, bank: { userId } },
     });
 
     if (!account) {

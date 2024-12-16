@@ -30,9 +30,9 @@ export class BankService {
     return userBanks;
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, userId: number) {
     const bank = await this.databaseService.bank.findUnique({
-      where: { id },
+      where: { id, userId },
     });
 
     if (!bank) {

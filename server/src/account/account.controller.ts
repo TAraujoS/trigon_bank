@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
+  Request,
 } from '@nestjs/common';
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './dto/create-account.dto';
@@ -21,13 +23,13 @@ export class AccountController {
   }
 
   @Get('/bank/:bankId')
-  findAll(@Param('bankId') bankId: number) {
-    return this.accountService.findAllByBankId(bankId);
+  findAll(@Param('bankId', ParseIntPipe) bankId: number, @Request() req) {
+    return this.accountService.findAllByBankId(bankId, req.user.id);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.accountService.findOne(id);
+  findOne(@Param('id', ParseIntPipe) id: number, @Request() req) {
+    return this.accountService.findOne(id, req.user.id);
   }
 
   @Patch(':id')

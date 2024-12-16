@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Request,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { BankService } from './bank.service';
 import { CreateBankDto } from './dto/create-bank.dto';
@@ -27,8 +28,8 @@ export class BankController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.bankService.findOne(id);
+  findOne(@Param('id', ParseIntPipe) id: number, @Request() req) {
+    return this.bankService.findOne(id, req.user.id);
   }
 
   @Patch(':id')
